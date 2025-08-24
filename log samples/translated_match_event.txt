@@ -1,0 +1,30 @@
+[1755482724441] Seat 1 life changed None -> 20.
+[1755482724441] Seat 2 life changed None -> 20.
+[1755482790654] Seat 1's Illvoi Galeblade resolved onto the battlefield.
+[1755482790654] Seat 2's Dockworker Drone resolved onto the battlefield.
+[1755482804188] Seat 1's Dockworker Drone resolved onto the battlefield.
+[1755482807450] Seat 2 life changed 20 -> 19.
+[1755482861824] Seat 2's Hemosymbic Mite resolved onto the battlefield.
+[1755482889299] Seat 1's Sunstar Expansionist resolved onto the battlefield.
+[1755482896098] Seat 2 life changed 19 -> 17.
+[1755482950570] Seat 2's Meltstrider's Resolve resolved onto the battlefield.
+[1755482962170] Seat 2's Sunstar Chaplain resolved onto the battlefield.
+[1755483044609] Seat 1's Illvoi Light Jammer resolved onto the battlefield.
+[1755483053352] Seat 1's Starfighter Pilot resolved onto the battlefield.
+[1755483094523] Seat 2's Haliya, Ascendant Cadet resolved onto the battlefield.
+[1755483109447] Seat 1 life changed 20 -> 17.
+[1755483149332] Seat 1's Banishing Light resolved onto the battlefield.
+[1755483166955] Seat 2 life changed 17 -> 10.
+[1755483192101] Seat 2's Icecave Crasher resolved onto the battlefield.
+[1755483237023] Seat 1's Mechanozoa resolved onto the battlefield.
+[1755483354386] Seat 2's Haliya, Ascendant Cadet resolved onto the battlefield.
+[1755483370254] Seat 1's Illvoi Galeblade resolved onto the battlefield.
+[1755483395017] Seat 1's Mechanozoa resolved onto the battlefield.
+[1755483412439] Seat 2 life changed 10 -> 9.
+[1755483438281] Seat 2's Weftblade Enhancer resolved onto the battlefield.
+[1755483482763] Seat 2 life changed 9 -> 7.
+[1755483534996] Seat 1 life changed 17 -> 13.
+[1755483550778] Seat 2 life changed 7 -> 5.
+[1755483552941] Seat 1's Starfighter Pilot resolved onto the battlefield.
+[1755483587135] Seat 2's Meltstrider's Resolve resolved onto the battlefield.
+[1755483606723] Seat 1 life changed 13 -> 2.

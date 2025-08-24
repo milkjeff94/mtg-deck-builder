@@ -1,0 +1,160 @@
+# MTG Deck Builder — Commands & Flags
+
+This project has a few main scripts:
+
+- **`runlog.sh`** — entrypoint wrapper for watcher/suggester  
+- **`draft_watch.py`** — live/replay watcher for Player.log  
+- **`draft_suggester.py`** — watcher + heuristic pick suggester  
+- **`view_parquet.py`** — viewer for `.parquet` / `.csv` outputs  
+
+---
+
+## Environment Variables
+
+- `MTGA_PLAYER_LOG` — Path to your Arena `Player.log`  
+  - macOS default: `~/Library/Logs/Wizards Of The Coast/MTGA/Player.log`  
+- `GIHWR_INDEX_PATH` — Ratings CSV (`Name` + `GIHWR`)  
+- `CARD_MAP_PATH` — Card ID → Name CSV (`mtga_card_id.csv`)  
+- `DRAFT_OUT_DIR` — Output folder (defaults to `./draft_out`)  
+- `DRAFT_DEBUG=1` — Debug logging (full fidelity; no truncation)  
+- `DRAFT_MISC=1` — Also log misc non-table lines (init/scene/heartbeats). Default **off**.  
+- `DRAFT_LIVE=1` — Live flush of CSV/Parquet after each event  
+
+---
+
+## `runlog.sh`
+
+Wrapper around watcher and suggester.
+
+```bash
+# Watcher (default)
+./runlog.sh
+
+# Suggester (picks + suggestions)
+./runlog.sh suggest
+
+# Replay last 20,000 lines then continue tailing
+./runlog.sh --replay --tail 20000 --input "$MTGA_PLAYER_LOG"
+./runlog.sh
+```
+
+## Suggester mode (what to look for)
+
+Run the suggester (writes to `draft_suggestions_out/` and logs into `draft_suggestions_out/draft_watch.log`):
+
+```bash
+./runlog.sh suggest
+# or directly:
+python3 draft_suggester.py --input "$MTGA_PLAYER_LOG"
+```
+
+Watch only the suggestion lines (fixes the bracket‐grep issue):
+
+```bash
+tail -f draft_suggestions_out/draft_watch.log \
+  | grep -E '^\[[^]]+\].*suggested P'
+```
+
+See available cards lines while drafting:
+
+```bash
+tail -f draft_suggestions_out/draft_watch.log \
+  | grep -E '^\[[^]]+\].*available P'
+```
+
+(Look for lines like:  
+`suggested P1P3: Card Name (GIHWR=0.57, score=0.812)`)
+
+---
+
+## Viewer shortcuts (inspect parquet/CSV)
+
+```bash
+# Show Pack 1 Pick 1 options (best → worst by WR)
+python3 view_parquet.py --p1p1
+
+# Show a specific pack/pick (e.g., Pack 2 Pick 3)
+python3 view_parquet.py --pack 2 --pick 3
+
+# Show last 10 picks
+python3 view_parquet.py --last-picks 10
+
+# Export CSV next to parquet files
+python3 view_parquet.py --export-csv
+
+# Point viewer at suggester outputs instead of watcher
+python3 view_parquet.py --suggest
+
+# Live refresh without clearing the screen
+python3 view_parquet.py --dir ./draft_out --watch --no-clear
+```
+
+---
+
+## Environment setup (ratings + id map)
+
+```bash
+# Ratings CSV (must include a GIH WR column; header variants are handled)
+export GIHWR_INDEX_PATH="$(pwd)/log samples/eoe_card_ratings.csv"
+
+# Optional: GRP id → Name map, improves numeric PackCards decoding
+export CARD_MAP_PATH="$(pwd)/log samples/mtga_card_id.csv"
+```
+
+---
+
+## Replay helpers
+
+```bash
+# Process only the last N lines and exit (no live tail)
+./runlog.sh --replay --tail 40000 --input "$MTGA_PLAYER_LOG"
+
+# Suggester replay (writes to draft_suggestions_out/)
+./runlog.sh suggest --replay --tail 40000 --input "$MTGA_PLAYER_LOG"
+```
+
+---
+
+## Debugging / full log fidelity
+
+```bash
+# Turn on verbose logs (no truncation; extra heartbeats & sniffers)
+export DRAFT_DEBUG=1
+
+# Optional: add regex sniffing of pack/pick counters
+export DRAFT_SNIFF=1
+
+# Run watcher or suggester with debug on
+./runlog.sh
+./runlog.sh suggest
+```
+
+---
+
+## Quick combined workflows
+
+```bash
+# 1) Start watcher (terminal A)
+./runlog.sh
+
+# 2) Live view parquet outputs (terminal B)
+python3 view_parquet.py --dir ./draft_out --watch --no-clear
+
+# 3) If using suggester:
+./runlog.sh suggest                           # terminal A (alternate)
+python3 view_parquet.py --suggest --watch     # terminal B
+```
+
+---
+
+## Grep cheats (safe bracket patterns)
+
+```bash
+# Suggestions only (suggester log)
+grep -E '^\[[^]]+\].*suggested P' draft_suggestions_out/draft_watch.log
+
+# Available pack lines (suggester or watcher log)
+grep -E '^\[[^]]+\].*available P' draft_out/draft_watch.log
+# or
+grep -E '^\[[^]]+\].*available P' draft_suggestions_out/draft_watch.log
+```

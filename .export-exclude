@@ -1,0 +1,35 @@
+# dependency dirs
+node_modules
+.venv
+env
+venv
+# build & caches
+dist
+build
+.cache
+__pycache__
+.DS_Store
+# large data
+draft_out
+data
+datasets
+logs
+*.parquet
+*.csv
+*.csv.gz
+*.jsonl
+*.zip
+*.tar
+*.tar.gz
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.png
+*.jpg
+*.jpeg
+*.gif
+# lockfiles not needed for review (optional)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
