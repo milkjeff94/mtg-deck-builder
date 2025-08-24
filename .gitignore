@@ -1,0 +1,32 @@
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+
+# Build artifacts
+*.parquet
+*.feather
+*.arrow
+*.ipynb_checkpoints
+
+# Logs and local outputs
+*.log
+draft_out/
+draft_suggestions_out/
+mock/Player.log
+
+# Node (if you add a frontend)
+node_modules/
+dist/
+build/
