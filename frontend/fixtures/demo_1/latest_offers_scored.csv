@@ -1,0 +1,4 @@
+draft_id,pack_number,pick_number,card_name,offered_card_gihwr,score,is_picked
+demo-123,1,1,Example Mapper,0.61,0.83,1
+demo-123,1,1,Basic Beater,0.56,0.70,0
+demo-123,1,1,Curve Filler,0.54,0.66,0

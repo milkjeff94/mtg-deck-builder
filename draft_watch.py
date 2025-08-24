@@ -57,7 +57,9 @@ def _log(msg: str):
 # -------------------------
 # 1) Config
 # -------------------------
-LOG_PATH = Path(os.environ.get("MTGA_PLAYER_LOG", str(Path.home() / "Library/Logs/Wizards Of The Coast/MTGA/Player.log"))).expanduser()
+REPO_ROOT = Path(__file__).resolve().parent
+# Default to repo-local logs/Player.log unless overridden by MTGA_PLAYER_LOG or --input
+LOG_PATH = Path(os.environ.get("MTGA_PLAYER_LOG", str(REPO_ROOT / "logs" / "Player.log"))).expanduser()
 OUT_DIR = Path(os.environ.get("DRAFT_OUT_DIR", "./draft_out")).resolve()
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 

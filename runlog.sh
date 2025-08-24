@@ -4,10 +4,19 @@
 set -euo pipefail
 
 # --- Config ---
-# Path to your live Arena Player.log (macOS default). Override if you use MEGA.
-export MTGA_PLAYER_LOG="${MTGA_PLAYER_LOG:-$HOME/Library/Logs/Wizards Of The Coast/MTGA/Player.log}"
-# If you sync the log via MEGA, uncomment and set to your path, e.g.:
-# export MTGA_PLAYER_LOG="$HOME/MEGA/MTGA/Logs/Player.log"
+# Path to Player.log used by watcher. Default to repo-local logs/Player.log
+export MTGA_PLAYER_LOG="${MTGA_PLAYER_LOG:-$(pwd)/logs/Player.log}"
+# Ensure directory exists
+mkdir -p "$(dirname "$MTGA_PLAYER_LOG")"
+# If running on macOS and the repo link doesn't exist yet, auto-symlink to the system Player.log
+if [[ "$(uname -s)" == "Darwin" ]] && [[ ! -e "$MTGA_PLAYER_LOG" ]]; then
+  MAC_LOG="$HOME/Library/Logs/Wizards Of The Coast/MTGA/Player.log"
+  if [[ -e "$MAC_LOG" ]]; then
+    ln -s "$MAC_LOG" "$MTGA_PLAYER_LOG" || true
+  fi
+fi
+# Touch the path to ensure an attach target (if it's a symlink, this updates the target)
+touch "$MTGA_PLAYER_LOG"
 
 # Ratings file (Name + GIH WR). Defaults to per-set CSV in repo
 export GIHWR_INDEX_PATH="${GIHWR_INDEX_PATH:-$(pwd)/log samples/eoe_card_ratings.csv}"

@@ -1,1 +1,10 @@
 body{font-family:sans-serif;background:#111;color:#eee;padding:20px;} h1{color:#4ea1ff;}
+table{border-collapse:collapse;width:100%;}
+th,td{border:1px solid #333;padding:6px 8px;}
+tr.picked{background:#2a2a17;}
+tr.picked td{background:#3a3a1a;}
+/* Status badge */
+.status-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:12px;border:1px solid #333;background:#2a2a2a;color:#ddd}
+.status-badge.ok{background:#1f5325;color:#eaffea;border-color:#2a7a33}
+.status-badge.mismatch{background:#612626;color:#ffecec;border-color:#8a3333}
+.status-badge.unknown{background:#2a2a2a;color:#ddd;border-color:#444}
