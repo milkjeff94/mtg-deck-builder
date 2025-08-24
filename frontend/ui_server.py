@@ -73,6 +73,17 @@ def _read_table(base: Path, name: str) -> pd.DataFrame:
             pass
     return pd.DataFrame()
 
+
+def _read_snapshot(base: Path, filename: str) -> pd.DataFrame:
+    """Read a single CSV snapshot (e.g. latest_offers.csv)."""
+    path = base / filename
+    if path.exists():
+        try:
+            return pd.read_csv(path)
+        except Exception:
+            pass
+    return pd.DataFrame()
+
 def _load_tables(base=None):
     # Allow request-time override: /api/offers?dir=watch or ?dir=suggest
     try:
@@ -97,20 +108,44 @@ def index():
 @app.route("/api/offers")
 def api_offers():
     base = _latest_base_dir()
-    _, _, packs = _load_tables(base)
+    # Prefer lightweight snapshot if available
+    snap = _read_snapshot(base, "latest_offers.csv")
+    rows = snap.to_dict(orient="records") if not snap.empty else []
     return jsonify({
         "base_dir": str(base),
-        "rows": packs.tail(30).to_dict(orient="records")
+        "rows": rows,
     })
 
 @app.route("/api/picks")
 def api_picks():
     base = _latest_base_dir()
-    _, picks, _ = _load_tables(base)
+    snap = _read_snapshot(base, "recent_picks.csv")
+    rows = snap.to_dict(orient="records") if not snap.empty else []
     return jsonify({
         "base_dir": str(base),
-        "rows": picks.tail(30).to_dict(orient="records")
+        "rows": rows,
     })
+
+
+@app.route("/api/suggestion")
+def api_suggestion():
+    base = _latest_base_dir()
+    log_path = base / "draft_watch.log"
+    card = None
+    if log_path.exists():
+        try:
+            lines = log_path.read_text(encoding="utf-8").splitlines()
+            for line in reversed(lines):
+                if "suggested" in line:
+                    try:
+                        after = line.split(": ", 1)[1]
+                        card = after.split(" (", 1)[0]
+                    except Exception:
+                        card = None
+                    break
+        except Exception:
+            pass
+    return jsonify({"base_dir": str(base), "card": card})
 
 if __name__ == "__main__":
     app.run(port=5050, debug=True, threaded=True)
